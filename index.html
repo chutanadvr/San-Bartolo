@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Carta del Menú - Pollería</title>
+    <title>Menú Digital - Pollería</title>
     <style>
         * {
             margin: 0;
@@ -12,85 +12,423 @@
         }
 
         body {
-            background-color: #2c1a0e; /* Color cálido de fondo tipo madera */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #2c1a0e 0%, #4a2c1a 100%);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             padding: 20px;
+            min-height: 100vh;
         }
 
+        /* Contenedor principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 60px;
+            backdrop-filter: blur(5px);
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            color: #ffd966;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #f0d9b5;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            margin-top: 10px;
+        }
+
+        .qr-badge {
+            display: inline-block;
+            background: #ffd966;
+            color: #2c1a0e;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        /* Grid de imágenes estilo galería */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Tarjeta de cada imagen */
         .menu-card {
-            max-width: 100%;
-            width: 100%;
             background: #fff9ef;
-            border-radius: 32px;
-            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5);
+            border-radius: 28px;
             overflow: hidden;
-            transition: transform 0.2s ease;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.4);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
         }
 
         .menu-card:hover {
-            transform: scale(1.01);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 45px -12px rgba(0,0,0,0.5);
         }
 
-        .menu-image {
-            display: block;
+        /* Imagen dentro de la tarjeta */
+        .menu-img {
             width: 100%;
             height: auto;
-            object-fit: contain;
-            background: #f5e6d3; /* fondo suave mientras carga */
+            display: block;
+            background: #f5e6d3;
+            transition: transform 0.4s ease;
         }
 
-        .footer-note {
-            text-align: center;
-            padding: 16px 12px;
-            background: #fef3e4;
-            font-size: 0.85rem;
-            color: #5a3e2b;
+        .menu-card:hover .menu-img {
+            transform: scale(1.02);
+        }
+
+        /* Pie de cada tarjeta */
+        .card-label {
+            padding: 14px 16px;
+            background: #fff3e4;
             border-top: 1px solid #f0dabc;
-            letter-spacing: 0.3px;
+            text-align: center;
         }
 
-        .footer-note a {
-            color: #b45f2b;
-            text-decoration: none;
-            font-weight: 500;
+        .card-label span {
+            font-weight: 600;
+            color: #8b5a2b;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
 
-        .footer-note a:hover {
-            text-decoration: underline;
+        /* Modal para vista ampliada */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.92);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
 
-        /* Extra pequeño para que se vea bien en celular */
-        @media (max-width: 480px) {
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 24px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            animation: zoomIn 0.25s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.6);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: monospace;
+        }
+
+        .close-modal:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        /* Controles inferior */
+        .footer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn {
+            background: #ffd966;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #2c1a0e;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background: #ffc107;
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #ffd966;
+            color: #ffd966;
+        }
+
+        .btn-outline:hover {
+            background: #ffd966;
+            color: #2c1a0e;
+        }
+
+        /* instrucción sutil */
+        .info-text {
+            text-align: center;
+            color: #e6ccaa;
+            font-size: 0.8rem;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        /* Scroll suave */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Responsive extra */
+        @media (max-width: 700px) {
             body {
                 padding: 12px;
             }
-            .footer-note {
-                font-size: 0.75rem;
-                padding: 12px 8px;
+            .menu-grid {
+                gap: 16px;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            .btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            .close-modal {
+                top: 15px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 38px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="menu-card">
-        <!-- 
-            IMPORTANTE: 
-            La imagen debe estar en la misma carpeta que este archivo index.html
-            y llamarse exactamente "cartapolleria.png" (respeta mayúsculas/minúsculas).
-            Si tu imagen tiene otro nombre, cámbialo en el atributo src.
-        -->
-        <img class="menu-image" 
-             src="cartapolleria.png" 
-             alt="Carta del menú - Pollería"
-             loading="eager">
-        <div class="footer-note">
-            🍗 Escanea el código QR para ver la carta desde tu celular · 
-            <a href="#" onclick="alert('📲 Guarda esta página o comparte el enlace de GitHub Pages'); return false;">Compartir</a>
+    <div class="container">
+        <div class="header">
+            <h1>🍗 POLLERÍA EL SABROSÓN 🍗</h1>
+            <p>Carta completa - Toque especial, sabor único</p>
+            <div class="qr-badge">
+                📱 Escanea el QR de GitHub Pages | Menú interactivo
+            </div>
+        </div>
+
+        <!-- Grid donde se cargarán las 9 imágenes dinámicamente -->
+        <div class="menu-grid" id="menuGrid"></div>
+
+        <div class="footer-controls">
+            <button class="btn" id="scrollTopBtn">⬆️ Subir arriba</button>
+            <button class="btn btn-outline" id="printPageBtn">🖨️ Vista previa / Imprimir</button>
+        </div>
+        <div class="info-text">
+            💡 Haz clic en cualquier carta para ampliarla | Ideal para celular y tablets
         </div>
     </div>
+
+    <!-- Modal para imagen ampliada -->
+    <div id="imageModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage" alt="Menú ampliado">
+    </div>
+
+    <script>
+        // Definimos las 9 imágenes con nombres exactos según lo pedido.
+        // Ajusta los nombres si tus archivos se llaman polleria1.jpg, polleria2.jpg ... polleria9.jpg
+        // Todos deben estar en la misma carpeta que este index.html.
+        const imagenes = [
+            { src: "polleria1.jpg", alt: "Página 1 - Chaufas y tallarines" },
+            { src: "polleria2.jpg", alt: "Página 2 - Combinados y platos salados" },
+            { src: "polleria3.jpg", alt: "Página 3 - Tortillas y tallarines" },
+            { src: "polleria4.jpg", alt: "Página 4 - Aeropuertos y guarniciones" },
+            { src: "polleria5.jpg", alt: "Página 5 - Frejolito y chaufas" },
+            { src: "polleria6.jpg", alt: "Página 6 - Platos especiales y caldos" },
+            { src: "polleria7.jpg", alt: "Página 7 - Pollo a la brasa y combitos 1-6" },
+            { src: "polleria8.jpg", alt: "Página 8 - Combos a lo pobre" },
+            { src: "polleria9.jpg", alt: "Página 9 - Bebidas y más" }
+        ];
+
+        const menuGrid = document.getElementById('menuGrid');
+
+        // Función para crear dinámicamente las tarjetas
+        function renderMenu() {
+            menuGrid.innerHTML = '';
+            imagenes.forEach((img, index) => {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                
+                const image = document.createElement('img');
+                image.src = img.src;
+                image.alt = img.alt;
+                image.className = 'menu-img';
+                image.loading = 'lazy';
+                
+                // Pie con número de página
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'card-label';
+                const span = document.createElement('span');
+                span.textContent = `📄 Página ${index + 1} de 9 · ${img.alt.substring(0, 28)}`;
+                labelDiv.appendChild(span);
+                
+                card.appendChild(image);
+                card.appendChild(labelDiv);
+                
+                // Evento para abrir modal al hacer clic en la carta
+                card.addEventListener('click', (e) => {
+                    // Evita que si se hizo clic exactamente en el label se cierre raro, pero funciona igual
+                    openModal(img.src, img.alt);
+                });
+                
+                menuGrid.appendChild(card);
+            });
+        }
+
+        // --- Modal logic ---
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeModalBtn = document.querySelector('.close-modal');
+
+        function openModal(imageSrc, altText) {
+            modal.classList.add('active');
+            modalImg.src = imageSrc;
+            modalImg.alt = altText;
+            // prevenir scroll del body
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            // opcional: reset src para limpiar
+            // pero no es necesario
+        }
+
+        // Eventos para cerrar modal
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            // si se hace clic en el fondo (el mismo modal) se cierra
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        // cerrar con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // --- Funciones adicionales: scroll top y print friendly ---
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const printPageBtn = document.getElementById('printPageBtn');
+        printPageBtn.addEventListener('click', () => {
+            // Genera una vista de impresión amigable con las imágenes
+            window.print();
+        });
+
+        // Pequeño estilo adicional para impresión: que las imágenes se vean bien al imprimir
+        const stylePrint = document.createElement('style');
+        stylePrint.textContent = `@media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            .header {
+                background: #f5e6d3;
+                color: black;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .header h1 { color: #b45f2b; text-shadow: none; }
+            .qr-badge, .footer-controls, .info-text, .close-modal, .modal {
+                display: none !important;
+            }
+            .menu-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .menu-img {
+                max-width: 100%;
+                page-break-inside: avoid;
+            }
+            .modal { display: none !important; }
+        }`;
+        document.head.appendChild(stylePrint);
+
+        // Inicializar la página
+        renderMenu();
+
+        // Control de error en imágenes (si alguna falta, mostrar texto alternativo)
+        // Esto ayuda en caso de que alguna imagen no exista, no rompe la experiencia
+        document.addEventListener('error', (e) => {
+            if (e.target.tagName === 'IMG') {
+                console.warn('Imagen no encontrada:', e.target.src);
+                // Opcional: poner un placeholder visual pero no interrumpe
+                if (!e.target.hasAttribute('data-error')) {
+                    e.target.setAttribute('data-error', 'true');
+                    e.target.style.background = '#ddd';
+                    e.target.style.padding = '40px 20px';
+                    e.target.style.minHeight = '200px';
+                    // Podemos mostrar un mensaje sutil sin interrumpir
+                    e.target.alt = '[Imagen no disponible] ' + e.target.alt;
+                }
+            }
+        }, true);
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Menú Digital - Pollería (Zoom con Scroll)</title>
+    <title>Menú Digital - Pollería (10 Páginas)</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -57,7 +56,6 @@
             margin-top: 12px;
         }
 
-        /* Grid de imágenes */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -65,7 +63,6 @@
             margin-bottom: 40px;
         }
 
-        /* Tarjeta de cada imagen */
         .menu-card {
             background: #fff9ef;
             border-radius: 28px;
@@ -106,7 +103,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* MODAL MODERNO CON ZOOM POR SCROLL */
+        /* MODAL CON ZOOM POR SCROLL */
         .modal {
             display: none;
             position: fixed;
@@ -126,7 +123,6 @@
             display: flex;
         }
 
-        /* Contenedor interno para el zoom con scroll */
         .modal-zoom-container {
             width: 100%;
             height: 100%;
@@ -151,12 +147,6 @@
             cursor: grabbing;
         }
 
-        /* Cuando el zoom está activo, permitir scroll para seguir haciendo zoom */
-        .modal-content.zoomed {
-            cursor: grab;
-        }
-
-        /* Barra de control del zoom */
         .zoom-controls {
             position: fixed;
             bottom: 25px;
@@ -170,7 +160,6 @@
             gap: 20px;
             z-index: 1010;
             border: 1px solid rgba(255, 217, 102, 0.5);
-            font-family: monospace;
         }
 
         .zoom-controls button {
@@ -216,7 +205,6 @@
             cursor: pointer;
             transition: 0.2s;
             z-index: 1010;
-            font-family: monospace;
             backdrop-filter: blur(4px);
         }
 
@@ -225,7 +213,6 @@
             transform: scale(1.05);
         }
 
-        /* Botones inferiores */
         .footer-controls {
             display: flex;
             flex-wrap: wrap;
@@ -310,19 +297,28 @@
                 height: 45px;
                 font-size: 34px;
             }
-            .info-text {
-                font-size: 0.75rem;
-            }
         }
 
-        /* Instrucción para escritorio */
-        .desktop-hint {
-            display: inline-block;
-            background: #00000060;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            margin-top: 8px;
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            .header {
+                background: #f5e6d3;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .header h1 { color: #b45f2b; text-shadow: none; }
+            .qr-badge, .footer-controls, .info-text, .modal, .zoom-controls, .close-modal-zoom {
+                display: none !important;
+            }
+            .menu-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .modal { display: none !important; }
         }
     </style>
 </head>
@@ -330,9 +326,9 @@
     <div class="container">
         <div class="header">
             <h1>🍗 POLLERÍA EL SABROSÓN 🍗</h1>
-            <p>Carta completa - Sabor que enamora</p>
+            <p>Carta completa - 10 páginas | Sabor que enamora</p>
             <div class="qr-badge">
-                📱 Escanea el QR | Menú interactivo
+                📱 Escanea el QR | Menú interactivo con zoom y arrastre
             </div>
         </div>
 
@@ -343,12 +339,12 @@
             <button class="btn btn-outline" id="printPageBtn">🖨️ Vista impresión</button>
         </div>
         <div class="info-text">
-            💡 <strong>En computadora / laptop:</strong> haz clic en cualquier carta → luego usa la <strong>RUEDA DEL MOUSE</strong> o <strong>touchpad (pellizcar o scroll)</strong> para hacer ZOOM. 
-            También puedes arrastrar la imagen. Presiona ESC o click fuera para salir.
+            💡 <strong>En computadora / laptop:</strong> haz clic en cualquier carta → usa la <strong>RUEDA DEL MOUSE</strong> o <strong>touchpad (scroll)</strong> para hacer ZOOM. 
+            Arrastra la imagen para moverla. Presiona ESC o haz clic fuera para salir.
         </div>
     </div>
 
-    <!-- Modal con soporte para zoom por scroll -->
+    <!-- Modal -->
     <div id="imageModal" class="modal">
         <div class="modal-zoom-container" id="zoomContainer">
             <img class="modal-content" id="modalImage" alt="Menú ampliado - Usa scroll para zoom">
@@ -363,18 +359,18 @@
     </div>
 
     <script>
-        // Lista de 9 imágenes
+        // ==================== 10 IMÁGENES ====================
         const imagenes = [
-            { src: "polleria1.jpg", alt: "Página 1 - Chaufas y tallarines" },
-            { src: "polleria2.jpg", alt: "Página 2 - Combinados y platos salados" },
-            { src: "polleria3.jpg", alt: "Página 3 - Tortillas y tallarines" },
-            { src: "polleria4.jpg", alt: "Página 4 - Aeropuertos y guarniciones" },
-            { src: "polleria5.jpg", alt: "Página 5 - Frejolito y chaufas" },
-            { src: "polleria6.jpg", alt: "Página 6 - Platos especiales y caldos" },
-            { src: "polleria7.jpg", alt: "Página 7 - Pollo a la brasa y combitos" },
-            { src: "polleria8.jpg", alt: "Página 8 - Combos a lo pobre" },
-            { src: "polleria8.jpg", alt: "Página 9 - Alitas" },
-            { src: "polleria9.jpg", alt: "Página 10 - Bebidas y más" }
+            { src: "polleria1.jpg", alt: "Página 1 - Chaufas, tallarines, combinados" },
+            { src: "polleria2.jpg", alt: "Página 2 - Combinados, platos salados y dulces, sopas" },
+            { src: "polleria3.jpg", alt: "Página 3 - Aeropuertos y aeropuertos salvajes" },
+            { src: "polleria4.jpg", alt: "Página 4 - Tortillas, tallarines y verduras" },
+            { src: "polleria5.jpg", alt: "Página 5 - Frejolito, chaufa y chaufa brasa" },
+            { src: "polleria6.jpg", alt: "Página 6 - Platos especiales, salchipapa y caldos" },
+            { src: "polleria7.jpg", alt: "Página 7 - Pollo a la brasa y combitos 1-6" },
+            { src: "polleria8.jpg", alt: "Página 8 - Combos 7-9 y combos a lo pobre" },
+            { src: "polleria9.jpg", alt: "Página 9 - Menú combito, alitas y especiales" },
+            { src: "polleria10.jpg", alt: "Página 10 - Bebidas gaseosas, maracuyá e infusiones" }
         ];
 
         const menuGrid = document.getElementById('menuGrid');
@@ -384,28 +380,20 @@
         const zoomContainer = document.getElementById('zoomContainer');
         const zoomControls = document.getElementById('zoomControls');
 
-        // Variables de zoom
+        // Variables de zoom y pan
         let currentZoom = 1;
         let isPanning = false;
         let startX = 0, startY = 0;
         let translateX = 0, translateY = 0;
 
-        // Función para actualizar transformación de la imagen
         function updateTransform() {
             modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
             const percent = Math.round(currentZoom * 100);
             const zoomPercentSpan = document.getElementById('zoomPercent');
             if (zoomPercentSpan) zoomPercentSpan.innerText = `${percent}%`;
-            
-            // Cambiar cursor según zoom
-            if (currentZoom > 1) {
-                modalImg.style.cursor = 'grab';
-            } else {
-                modalImg.style.cursor = 'default';
-            }
+            modalImg.style.cursor = currentZoom > 1 ? 'grab' : 'default';
         }
 
-        // Resetear zoom y posición
         function resetZoom() {
             currentZoom = 1;
             translateX = 0;
@@ -413,42 +401,35 @@
             updateTransform();
         }
 
-        // Aplicar zoom relativo (desde el centro o usando punto de scroll)
         function zoomAt(amount, clientX, clientY) {
             const oldZoom = currentZoom;
             let newZoom = currentZoom + amount;
-            newZoom = Math.min(Math.max(0.5, newZoom), 5); // límites: 0.5x a 5x
+            newZoom = Math.min(Math.max(0.5, newZoom), 5);
             if (newZoom === currentZoom) return;
             
-            // Si tenemos coordenadas del mouse, hacemos zoom hacia ese punto
             if (clientX !== undefined && clientY !== undefined && modalImg.getBoundingClientRect) {
                 const rect = modalImg.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
                 const deltaX = clientX - centerX;
                 const deltaY = clientY - centerY;
-                
                 const scaleFactor = newZoom / oldZoom;
                 translateX = translateX * scaleFactor + deltaX * (1 - scaleFactor);
                 translateY = translateY * scaleFactor + deltaY * (1 - scaleFactor);
             }
-            
             currentZoom = newZoom;
             updateTransform();
         }
 
-        // Evento de scroll para zoom (lo que pide el usuario: rueda del mouse / pad)
+        // Evento de scroll para zoom
         function onWheelZoom(e) {
             if (!modal.classList.contains('active')) return;
-            
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.1 : 0.1;
-            const clientX = e.clientX;
-            const clientY = e.clientY;
-            zoomAt(delta, clientX, clientY);
+            zoomAt(delta, e.clientX, e.clientY);
         }
 
-        // Mover/arrastrar la imagen cuando está con zoom
+        // Arrastre con mouse
         function onMouseDown(e) {
             if (currentZoom <= 1) return;
             e.preventDefault();
@@ -471,19 +452,37 @@
             if (modalImg) modalImg.style.cursor = currentZoom > 1 ? 'grab' : 'default';
         }
 
-        // Abrir modal con imagen específica
+        // Arrastre táctil para móviles
+        function onTouchStart(e) {
+            if (currentZoom <= 1) return;
+            const touch = e.touches[0];
+            startX = touch.clientX - translateX;
+            startY = touch.clientY - translateY;
+            isPanning = true;
+            e.preventDefault();
+        }
+
+        function onTouchMove(e) {
+            if (!isPanning || currentZoom <= 1) return;
+            const touch = e.touches[0];
+            translateX = touch.clientX - startX;
+            translateY = touch.clientY - startY;
+            updateTransform();
+            e.preventDefault();
+        }
+
+        function onTouchEnd() {
+            isPanning = false;
+        }
+
+        // Abrir modal
         function openModal(imageSrc, altText) {
             modal.classList.add('active');
             modalImg.src = imageSrc;
             modalImg.alt = altText;
-            resetZoom(); // Siempre iniciar sin zoom al abrir nueva imagen
+            resetZoom();
             zoomControls.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
-            // Forzar reflow para que el modal tome los eventos
-            setTimeout(() => {
-                // Aseguramos eventos
-            }, 10);
         }
 
         function closeModalFunc() {
@@ -510,52 +509,28 @@
                 const labelDiv = document.createElement('div');
                 labelDiv.className = 'card-label';
                 const span = document.createElement('span');
-                span.textContent = `📄 Página ${index + 1} · ${img.alt.substring(0, 28)}`;
+                span.textContent = `📄 Página ${index + 1} de 10 · ${img.alt.substring(0, 30)}${img.alt.length > 30 ? '…' : ''}`;
                 labelDiv.appendChild(span);
                 
                 card.appendChild(image);
                 card.appendChild(labelDiv);
                 
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    openModal(img.src, img.alt);
-                });
-                
+                card.addEventListener('click', () => openModal(img.src, img.alt));
                 menuGrid.appendChild(card);
             });
         }
 
-        // Agregar eventos del zoom y arrastre
+        // Bindear eventos de zoom y arrastre
         function bindZoomEvents() {
-            const modalElement = document.getElementById('imageModal');
-            modalElement.addEventListener('wheel', onWheelZoom, { passive: false });
-            
+            modal.addEventListener('wheel', onWheelZoom, { passive: false });
             modalImg.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
             
-            // Eventos táctiles para dispositivos móviles también (complemento)
-            modalImg.addEventListener('touchstart', (e) => {
-                if (currentZoom <= 1) return;
-                const touch = e.touches[0];
-                startX = touch.clientX - translateX;
-                startY = touch.clientY - translateY;
-                isPanning = true;
-                e.preventDefault();
-            });
-            window.addEventListener('touchmove', (e) => {
-                if (!isPanning || currentZoom <= 1) return;
-                const touch = e.touches[0];
-                translateX = touch.clientX - startX;
-                translateY = touch.clientY - startY;
-                updateTransform();
-                e.preventDefault();
-            });
-            window.addEventListener('touchend', () => {
-                isPanning = false;
-            });
+            modalImg.addEventListener('touchstart', onTouchStart, { passive: false });
+            window.addEventListener('touchmove', onTouchMove, { passive: false });
+            window.addEventListener('touchend', onTouchEnd);
             
-            // Botones de la interfaz de zoom
             const zoomIn = document.getElementById('zoomInBtn');
             const zoomOut = document.getElementById('zoomOutBtn');
             const resetBtn = document.getElementById('resetZoomBtn');
@@ -565,40 +540,22 @@
             if (resetBtn) resetBtn.addEventListener('click', resetZoom);
         }
 
-        // Cerrar modal con click fuera o ESC
+        // Cerrar modal
         modal.addEventListener('click', (e) => {
-            if (e.target === modal || e.target === zoomContainer) {
-                closeModalFunc();
-            }
+            if (e.target === modal || e.target === zoomContainer) closeModalFunc();
         });
-        
         closeModalBtn.addEventListener('click', closeModalFunc);
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModalFunc();
-            }
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModalFunc();
         });
 
-        // Scroll top e impresión
-        const scrollTopBtn = document.getElementById('scrollTopBtn');
-        scrollTopBtn.addEventListener('click', () => {
+        // Botones footer
+        document.getElementById('scrollTopBtn').addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-        const printPageBtn = document.getElementById('printPageBtn');
-        printPageBtn.addEventListener('click', () => {
+        document.getElementById('printPageBtn').addEventListener('click', () => {
             window.print();
         });
-
-        // Estilos de impresión
-        const stylePrint = document.createElement('style');
-        stylePrint.textContent = `@media print {
-            body { background: white; padding: 10px; }
-            .header { background: #f5e6d3; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .qr-badge, .footer-controls, .info-text, .modal, .zoom-controls, .close-modal-zoom { display: none !important; }
-            .menu-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
-            .modal { display: none !important; }
-        }`;
-        document.head.appendChild(stylePrint);
 
         // Inicializar
         renderMenu();
@@ -611,7 +568,7 @@
                 e.target.style.background = '#ddd';
                 e.target.style.padding = '40px 20px';
                 e.target.style.minHeight = '200px';
-                e.target.alt = '[No cargó] ' + e.target.alt;
+                e.target.alt = '[Imagen no encontrada] ' + e.target.alt;
             }
         }, true);
     </script>
